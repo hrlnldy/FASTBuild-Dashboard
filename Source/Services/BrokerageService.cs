@@ -2,12 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Timers;
+using FastBuild.Dashboard.Configuration;
 
 namespace FastBuild.Dashboard.Services
 {
 	internal class BrokerageService : IBrokerageService
 	{
-		private const string WorkerPoolRelativePath = @"main\16";
+		//private const string WorkerPoolRelativePath = @"main\16";
 
 		private string[] _workerNames;
 
@@ -33,6 +34,19 @@ namespace FastBuild.Dashboard.Services
 			get => Environment.GetEnvironmentVariable("FASTBUILD_BROKERAGE_PATH");
 			set => Environment.SetEnvironmentVariable("FASTBUILD_BROKERAGE_PATH", value);
 		}
+
+		public string BrokerageRelativePath
+        {
+            get
+            {
+				return AppSettings.Default.BrokerageRelativePath;
+			}
+			set
+            {
+				AppSettings.Default.BrokerageRelativePath = value;
+				AppSettings.Default.Save();
+			}
+        }
 
 		public event EventHandler WorkerCountChanged;
 
@@ -67,7 +81,7 @@ namespace FastBuild.Dashboard.Services
 
 				try
 				{
-					this.WorkerNames = Directory.GetFiles(Path.Combine(brokeragePath, WorkerPoolRelativePath))
+					this.WorkerNames = Directory.GetFiles(Path.Combine(brokeragePath, BrokerageRelativePath))
 						.Select(Path.GetFileName)
 						.ToArray();
 				}

@@ -12,9 +12,8 @@ namespace FastBuild.Dashboard.Services.Worker
 				var cores = AppSettings.Default.WorkerCores;
 				if (cores <= 0)
 				{
-					cores = Environment.ProcessorCount / 2;
+					cores = Environment.ProcessorCount;
 				}
-
 				return cores;
 			}
 			set

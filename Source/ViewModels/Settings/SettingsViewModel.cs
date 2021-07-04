@@ -25,6 +25,15 @@ namespace FastBuild.Dashboard.ViewModels.Settings
 				this.NotifyOfPropertyChange();
 			}
 		}
+		public string BrokerageRelativePath
+		{
+			get => IoC.Get<IBrokerageService>().BrokerageRelativePath;
+			set
+			{
+				IoC.Get<IBrokerageService>().BrokerageRelativePath = value;
+				this.NotifyOfPropertyChange();
+			}
+		}
 
 		public string DisplayWorkersInPool
 		{

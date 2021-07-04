@@ -6,6 +6,7 @@ namespace FastBuild.Dashboard.Services
     {
 		string[] WorkerNames { get; }
 		string BrokeragePath { get; set; }
+		string BrokerageRelativePath { get; set; }
 
 		event EventHandler WorkerCountChanged;
     }
