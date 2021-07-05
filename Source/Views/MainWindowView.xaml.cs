@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using FastBuild.Dashboard.Configuration;
 using FastBuild.Dashboard.ViewModels;
 using FastBuild.Dashboard.Services.Worker;
+using System.ComponentModel;
 
 namespace FastBuild.Dashboard.Views
 {
@@ -33,8 +34,12 @@ namespace FastBuild.Dashboard.Views
 				this.Hide();
 			}
 		}
-
-		protected override void OnClosed(EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
+        {
+			e.Cancel = true;
+			this.WindowState = WindowState.Minimized;
+        }
+        protected override void OnClosed(EventArgs e)
 		{
 			_trayNotifier.Close();
 			base.OnClosed(e);

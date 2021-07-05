@@ -71,6 +71,7 @@ namespace FastBuild.Dashboard.ViewModels.Worker
 		{
 			if (!this.IsWorkerRunning)
 			{
+				_workerAgentService.Initialize();
 				return;
 			}
 

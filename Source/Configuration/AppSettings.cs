@@ -22,6 +22,6 @@ namespace FastBuild.Dashboard.Configuration
 		public string ExternalSourceEditorArgs { get; set; }
 		public string ExternalSourceEditorAdditionalArgs { get; set; }
 		public string ExternalSourceEditor { get; set; } = "visual-studio";
-		public string BrokerageRelativePath { get; set; } = @"main\20.window";
+		public string BrokerageRelativePath { get; set; } = @"main\20.windows";
 	}
 }

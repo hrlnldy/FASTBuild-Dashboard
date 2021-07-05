@@ -16,21 +16,8 @@ namespace FastBuild.Dashboard.Services.Worker
 
 		private IntPtr _workerWindowPtr;
 		private uint _workerProcessId;
-		private bool _isRunning;
-		public bool IsRunning { 
-			get { 
-				if (!_isRunning)
-                {
-					// reinitialize
-					Initialize();
-				}
-				return _isRunning;
-			}
-			private set
-            {
-				_isRunning = value;
-			}
-		}
+
+		public bool IsRunning { get; private set; }
 
 		private bool _hasAppExited;
 
@@ -45,27 +32,20 @@ namespace FastBuild.Dashboard.Services.Worker
 
 		public void Initialize()
 		{
-			lock(this)
-            {
-				if (_isRunning)
-				{
-					return;
-				}
-				_workerWindowPtr = this.FindExistingWorkerWindow();
-				if (_workerWindowPtr == IntPtr.Zero)
-				{
-					this.StartNewWorker();
-				}
-				else
-				{
-					this.InitializeWorker();
-					this.OnWorkerStarted();
-				}
+			_workerWindowPtr = this.FindExistingWorkerWindow();
+			if (_workerWindowPtr == IntPtr.Zero)
+			{
+				this.StartNewWorker();
+			}
+			else
+			{
+				this.InitializeWorker();
+				this.OnWorkerStarted();
+			}
 
-				if (this._isRunning)
-				{
-					this.StartWorkerGuardian();
-				}
+			if (this.IsRunning)
+			{
+				this.StartWorkerGuardian();
 			}
 		}
 
@@ -187,7 +167,7 @@ namespace FastBuild.Dashboard.Services.Worker
 			{
 				if (_workerWindowPtr == IntPtr.Zero || !WinAPI.IsWindow(_workerWindowPtr))
 				{
-					this._isRunning = false;
+					this.IsRunning = false;
 				}
 				else
 				{
@@ -195,11 +175,11 @@ namespace FastBuild.Dashboard.Services.Worker
 					WinAPI.GetWindowThreadProcessId(_workerWindowPtr, ref processId);
 					if (processId != _workerProcessId)
 					{
-						this._isRunning = false;
+						this.IsRunning = false;
 					}
 				}
 
-				if (!this._isRunning)
+				if (!this.IsRunning)
 				{
 					this.OnWorkerErrorOccurred("Worker stopped unexpectedly, restarting");
 					this.StartNewWorker();
@@ -220,13 +200,13 @@ namespace FastBuild.Dashboard.Services.Worker
 
 		private void OnWorkerStarted()
 		{
-			this._isRunning = true;
+			this.IsRunning = true;
 			this.WorkerRunStateChanged?.Invoke(this, new WorkerRunStateChangedEventArgs(true, null));
 		}
 
 		private void OnWorkerErrorOccurred(string message)
 		{
-			this._isRunning = false;
+			this.IsRunning = false;
 			this.WorkerRunStateChanged?.Invoke(this, new WorkerRunStateChangedEventArgs(false, message));
 		}
 
